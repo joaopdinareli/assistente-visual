@@ -7,3 +7,7 @@ async function executeScript(filePath) {
     files: [filePath]
   });
 }
+
+document.getElementById('btn-luz-azul').addEventListener('click', () => {
+  executeScript('scripts/filtro-luz-azul.js');
+});

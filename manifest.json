@@ -3,6 +3,10 @@
   "name": "Assistente Visual",
   "description": "Conjunto de ferramentas para melhorar a acessibilidade e o conforto visual durante a navegação web.",
   "version": "0.1.0",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
   "action": {
     "default_popup": "popup/popup.html"
   }
