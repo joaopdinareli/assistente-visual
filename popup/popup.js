@@ -11,3 +11,7 @@ async function executeScript(filePath) {
 document.getElementById('btn-luz-azul').addEventListener('click', () => {
   executeScript('scripts/filtro-luz-azul.js');
 });
+
+document.getElementById('btn-daltonismo').addEventListener('click', () => {
+  executeScript('scripts/filtro-monocromatico.js');
+});
