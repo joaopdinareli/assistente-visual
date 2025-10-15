@@ -1,6 +1,9 @@
 {
+  "manifest_version": 3,
   "name": "Assistente Visual",
   "description": "Conjunto de ferramentas para melhorar a acessibilidade e o conforto visual durante a navegação web.",
   "version": "0.1.0",
-  "manifest_version": 3
+  "action": {
+    "default_popup": "popup/popup.html"
+  }
 }
