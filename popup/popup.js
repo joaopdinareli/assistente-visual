@@ -15,3 +15,7 @@ document.getElementById('btn-luz-azul').addEventListener('click', () => {
 document.getElementById('btn-daltonismo').addEventListener('click', () => {
   executeScript('scripts/filtro-monocromatico.js');
 });
+
+document.getElementById('btn-lupa').addEventListener('click', () => {
+  executeScript('scripts/lupa.js');
+});
