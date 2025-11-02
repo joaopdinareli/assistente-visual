@@ -19,3 +19,19 @@ document.getElementById('btn-daltonismo').addEventListener('click', () => {
 document.getElementById('btn-lupa').addEventListener('click', () => {
   executeScript('scripts/lupa.js');
 });
+
+// Novos botões: filtros de daltonismo específicos
+const btnProtanopia = document.getElementById('btn-protanopia');
+if (btnProtanopia) btnProtanopia.addEventListener('click', () => {
+  executeScript('scripts/filtro-daltonismo-protanopia.js');
+});
+
+const btnDeuteranopia = document.getElementById('btn-deuteranopia');
+if (btnDeuteranopia) btnDeuteranopia.addEventListener('click', () => {
+  executeScript('scripts/filtro-daltonismo-deuteranopia.js');
+});
+
+const btnTritanopia = document.getElementById('btn-tritanopia');
+if (btnTritanopia) btnTritanopia.addEventListener('click', () => {
+  executeScript('scripts/filtro-daltonismo-tritanopia.js');
+});
