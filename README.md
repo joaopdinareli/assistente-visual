@@ -1,92 +1,23 @@
-# assistente-visual
+# Assistente Visual
 
-Extensão de navegador para melhorar a acessibilidade visual e o conforto durante a navegação — com filtros e ferramentas úteis para pessoas com baixa visão e daltonismo.
+Extensão para o navegador Chrome que oferece um conjunto de ferramentas para alterar a exibição de sites visando melhorar a acessibilidade e o conforto visual durante a navegação.
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+## O Problema
 
-## Visão geral
+A web, em sua forma atual, não é inclusiva. Muitos sites dependem de cores e designs que excluem uma parcela significativa da população. Pessoas com daltonismo têm dificuldade em diferenciar botões de status ou informações em gráficos, enquanto aqueles com baixa visão sofrem com o baixo contraste, fontes pequenas e falta de zoom adequado.
+Este não é um problema de nicho. Ele afeta milhões de pessoas em todo o mundo.
 
-O projeto fornece uma extensão (Chrome / Edge compatível) que adiciona ao navegador ferramentas visuais no contexto da página:
+- **Pessoas com deficiência visual:** A Organização Mundial da Saúde (OMS) estima que pelo menos 2,2 bilhões de pessoas em todo o mundo tenham deficiência visual.
+- **Daltonismo:** No Brasil, a prevalência do daltonismo é de aproximadamente 3,5% da população, afetando mais homens (cerca de 5% a 8%) do que mulheres (0,2% a 0,5%). Isso significa que, em um grupo de 100 pessoas, cerca de 3 a 4 indivíduos podem ter alguma forma de deficiência de cores. A cor, usada para dar significado em interfaces (como verde para "sucesso" e vermelho para "erro"), não é, portanto, universalmente compreendida.
+- **Fadiga Visual Digital:** Um problema crescente devido ao tempo excessivo de tela. Estudos mostram que mais de 60% dos adultos experimentam sintomas como olhos secos e visão embaçada, que podem ser amenizados com ajustes de tela.
 
-- Filtro de luz azul
-- Filtro monocromático (grayscale)
-- Lupa de inspeção (ampliação)
-- Filtros de daltonismo: Protanopia, Deuteranopia, Tritanopia
+## Nossa Proposta: "Assistente Visual"
 
-Os filtros são aplicados via scripts que injetam estilos/SVGs na página ativa. A UI principal está em `popup/` e os scripts em `scripts/`.
+Em vez de criar uma ferramenta para cada problema, podemos integrar diversas funcionalidades em um só lugar. A extensão terá um painel simples e intuitivo, permitindo ao usuário:
 
-## Instalação (modo desenvolvedor)
-
-1. Clone ou baixe este repositório.
-2. Abra o Chrome/Edge e acesse chrome://extensions (ou edge://extensions).
-3. Ative o "Modo do desenvolvedor" no canto superior direito.
-4. Clique em "Carregar sem compactação" (Load unpacked) e selecione a pasta raiz do projeto (onde está `manifest.json`).
-5. O ícone da extensão aparecerá na barra de ferramentas; abra uma página e use o popup para ativar as ferramentas.
-
-## Uso
-
-- Abra o popup da extensão.
-- Use os botões para ativar/desativar cada ferramenta:
- 	- Filtro de Luz Azul
- 	- Lupa
- 	- Filtro Daltonismo (Monocromático)
- 	- Protanopia — simula dificuldade com vermelho
- 	- Deuteranopia — simula dificuldade com verde
- 	- Tritanopia — simula dificuldade com azul/amarelo
-
-Cada filtro funciona como toggle: ao clicar novamente o mesmo script remove o filtro.
-
-## Filtros de Daltonismo
-
-Arquivos relacionados:
-
-- `scripts/filtro-daltonismo-protanopia.js` — Protanopia (dificuldade com vermelho)
-- `scripts/filtro-daltonismo-deuteranopia.js` — Deuteranopia (dificuldade com verde)
-- `scripts/filtro-daltonismo-tritanopia.js` — Tritanopia (dificuldade com azul/amarelo)
-
-Como funcionam:
-
-- Cada script injeta um elemento SVG invisível com um `feColorMatrix` que transforma as cores da página.
-- O filtro é aplicado ao `document.documentElement` via CSS (`filter: url(#id-do-filtro)`).
-- Observação: conteúdo em iframes cross-origin pode não ser afetado.
-
-Limitações e recomendações
-
-- Aplicar um desses filtros sobrescreve/manipula a propriedade `filter` do elemento raiz; se outros scripts aplicarem filtros diretamente nessa propriedade, eles podem ser sobrescritos. Se desejar, posso alterar o comportamento para preservar filtros existentes.
-- As matrizes usadas são aproximações visuais; para simulações científicas mais precisas, há algoritmos (ex.: Machado et al.) que podem ser integrados.
-
-## Estrutura do projeto
-
-```
-popup/
- ├─ popup.html
- ├─ popup.css
- └─ popup.js
-scripts/
- ├─ filtro-luz-azul.js
- ├─ filtro-monocromatico.js
- ├─ lupa.js
- ├─ filtro-daltonismo-protanopia.js
- ├─ filtro-daltonismo-deuteranopia.js
- └─ filtro-daltonismo-tritanopia.js
-docs/
- └─ Assistente_Visual.pdf
-manifest.json
-README.md
-```
-
-## Contribuindo
-
-Contribuições são bem-vindas. Para sugerir melhorias ou enviar PRs:
-
-1. Abra uma issue descrevendo a proposta.
-2. Crie uma branch com um nome descritivo.
-3. Envie um pull request com a descrição das mudanças.
-
-## Licença
-
-Este projeto está licenciado sob a MIT — veja o arquivo `LICENSE`.
-
-## Contato
-
-Se precisar de ajuda com melhorias (preservar filtros, dropdown único, intensidade ajustável), abra uma issue ou solicite aqui que eu implemente a mudança.
+- **Filtros para Daltonismo:** O usuário poderá escolher um filtro para corrigir ou adaptar as cores de acordo com o seu tipo de daltonismo, tornando informações que dependem de cores (como gráficos) acessíveis.
+- **Ferramentas para Baixa Visão:**
+  - **Alto Contraste:** Alternar rapidamente entre esquemas de cores de alto contraste, essencial para quem tem baixa acuidade visual.
+  - **Zoom de Texto:** Ampliar apenas o texto da página sem quebrar o layout, garantindo que o conteúdo seja legível e a formatação seja mantida.
+  - **Ferramenta de Lupa:** Adicionar uma lupa com zoom editável para inspecionar partes específicas da página.
+  - **Filtros para Conforto e Leitura:** Uma funcionalidade para reduzir a emissão de luz azul da tela, que prejudica o sono e causa fadiga visual. Para isso, a extensão tornaria as cores da tela mais quentes (amareladas ou alaranjadas), aliviando o cansaço ocular, especialmente ao usar o computador à noite.
