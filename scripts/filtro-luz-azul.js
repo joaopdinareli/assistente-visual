@@ -14,7 +14,10 @@
     overlay.style.left = '0';
     overlay.style.width = '100vw';
     overlay.style.height = '100vh';
-    overlay.style.backgroundColor = 'rgba(255, 150, 0, 0.15)'; // Cor alaranjada, semi-transparente
+    // Cor alaranjada com blend mode para não parecer um bloco opaco
+    overlay.style.backgroundColor = 'rgba(255, 150, 0, 0.15)'; // padrão 15%
+    overlay.style.mixBlendMode = 'multiply';
+    overlay.style.transition = 'background-color 160ms linear';
     overlay.style.zIndex = '999999'; // Garante que fique por cima de tudo
     overlay.style.pointerEvents = 'none'; // Impede que o overlay bloqueie cliques
 
