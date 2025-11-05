@@ -11,8 +11,19 @@
   <div class="container">
     <h3>Assistente Visual</h3>
     <button id="btn-luz-azul">Filtro de Luz Azul</button>
-    <button id="btn-lupa">Ativar Lupa</button>
-    <button id="btn-daltonismo">Filtro Daltonismo (Monocromático)</button>
+    <div class="luz-azul-control">
+      <label for="slider-luz-azul">Intensidade Luz Azul: <span id="slider-luz-azul-value">15%</span></label>
+      <input id="slider-luz-azul" type="range" min="0" max="100" value="15">
+    </div>
+    <button id="btn-lupa">Ativar/Desativar Lupa</button>
+    <div class="daltonismo-group">
+      <p>Filtros de Daltonismo:</p>
+      <button id="btn-protanopia">Protanopia (Vermelho)</button>
+      <button id="btn-deuteranopia">Deuteranopia (Verde)</button>
+      <button id="btn-tritanopia">Tritanopia (Azul/Amarelo)</button>
+      <button id="btn-monocromatico">Acromatopsia (Monocromático)</button>
+    </div>
+    <!-- <button id="btn-alto-contraste">Alto Contraste</button> -->
   </div>
   <script src="popup.js"></script>
 </body>
