@@ -64,7 +64,7 @@ if (slider) {
   });
 }
 
-document.getElementById('btn-daltonismo').addEventListener('click', () => {
+document.getElementById('btn-monocromatico').addEventListener('click', () => {
   executeScript('scripts/filtro-monocromatico.js');
 });
 
@@ -88,7 +88,7 @@ if (btnTritanopia) btnTritanopia.addEventListener('click', () => {
   executeScript('scripts/filtro-daltonismo-tritanopia.js');
 });
 
-const btnAltoContraste = document.getElementById('btn-alto-contraste');
-if (btnAltoContraste) btnAltoContraste.addEventListener('click', () => {
-  executeScript('scripts/filtro-alto-contraste.js');
-});
+// const btnAltoContraste = document.getElementById('btn-alto-contraste');
+// if (btnAltoContraste) btnAltoContraste.addEventListener('click', () => {
+//   executeScript('scripts/filtro-alto-contraste.js');
+// });
