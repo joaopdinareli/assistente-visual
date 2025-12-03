@@ -8,23 +8,97 @@
 </head>
 
 <body>
-  <div class="container">
-    <h3>Assistente Visual</h3>
-    <button id="btn-luz-azul">Filtro de Luz Azul</button>
-    <div class="luz-azul-control">
-      <label for="slider-luz-azul">Intensidade Luz Azul: <span id="slider-luz-azul-value">15%</span></label>
-      <input id="slider-luz-azul" type="range" min="0" max="100" value="15">
-    </div>
-    <button id="btn-lupa">Ativar/Desativar Lupa</button>
-    <div class="daltonismo-group">
-      <p>Filtros de Daltonismo:</p>
-      <button id="btn-protanopia">Protanopia (Vermelho)</button>
-      <button id="btn-deuteranopia">Deuteranopia (Verde)</button>
-      <button id="btn-tritanopia">Tritanopia (Azul/Amarelo)</button>
-      <button id="btn-monocromatico">Acromatopsia (Monocromático)</button>
-    </div>
-    <!-- <button id="btn-alto-contraste">Alto Contraste</button> -->
+  <div class="popup-container">
+    <header class="pv-header">
+      <div class="header-title">
+        <h3>Assistente Visual</h3>
+        <span class="badge">PRO</span>
+      </div>
+      <button id="btn-close" class="icon-btn" aria-label="Fechar janela">
+        <img src="../icons/close.svg" alt="fechar" />
+      </button>
+    </header>
+
+    <main class="content">
+      <!-- Cartão Principal: Filtro de Luz Azul -->
+      <section class="card hero-card">
+        <div class="card-header">
+          <div class="icon-box primary">
+            <img src="../icons/filter.svg" alt="" />
+          </div>
+          <div class="card-text">
+            <h4>Filtro de Luz Azul</h4>
+            <p>Proteja seus olhos</p>
+          </div>
+          <button id="btn-luz-azul" class="toggle-btn" title="Ativar/Desativar">
+            <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+              <line x1="12" y1="2" x2="12" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="slider-container">
+          <div class="slider-labels">
+            <label for="slider-luz-azul">Intensidade</label>
+            <strong id="slider-luz-azul-value">15%</strong>
+          </div>
+          <input id="slider-luz-azul" type="range" min="0" max="100" value="15" class="modern-range">
+        </div>
+      </section>
+
+      <!-- Ação Secundária: Lupa -->
+      <button id="btn-lupa" class="action-row" title="Ativar Lupa">
+        <div class="row-content">
+          <div class="icon-box secondary">
+            <img src="../icons/zoom.svg" alt="" />
+          </div>
+          <span>Lupa de Acessibilidade</span>
+        </div>
+        <!-- <div class="arrow-icon">→</div>-->
+      </button>
+
+      <!-- Ação Secundária: Alto Contraste -->
+      <button id="btn-alto-contraste" class="action-row" title="Ativar Alto Contraste">
+        <div class="row-content">
+          <div class="icon-box contrast">
+            <img src="../icons/theme.svg" alt="Alto Contraste" />
+          </div>
+          <span>Alto Contraste</span>
+        </div>
+        <!-- <div class="arrow-icon">→</div>-->
+      </button>
+
+      <!-- Seção Daltonismo -->
+      <section class="daltonismo-section">
+        <h4 class="section-title">Modo Daltonismo</h4>
+        <div class="grid-options">
+          <button id="btn-protanopia" class="option-card">
+            <div class="color-dot red"></div>
+            <span>Protanopia</span>
+          </button>
+          <button id="btn-deuteranopia" class="option-card">
+            <div class="color-dot green"></div>
+            <span>Deuteranopia</span>
+          </button>
+          <button id="btn-tritanopia" class="option-card">
+            <div class="color-dot blue"></div>
+            <span>Tritanopia</span>
+          </button>
+          <button id="btn-monocromatico" class="option-card">
+            <div class="color-dot mono"></div>
+            <span>Monocromático</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pv-footer">
+      <small>Assistente Visual v1.0</small>
+    </footer>
   </div>
+
   <script src="popup.js"></script>
 </body>
 

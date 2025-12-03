@@ -1,50 +1,35 @@
-// Alto contraste — implementado via classe + <style> injetado
+// Alto contraste — implementado via CSS Filter (mais compatível e moderno)
 (function () {
     const STYLE_ID = 'assistente-visual-high-contrast-style';
-    const CLASS_NAME = 'assistente-visual-high-contrast';
 
     // Se o estilo já existe, remove e desativa o modo
     const existingStyle = document.getElementById(STYLE_ID);
     if (existingStyle) {
         existingStyle.remove();
-        document.documentElement.classList.remove(CLASS_NAME);
         return;
     }
 
-    // Cria o bloco de estilo para alto contraste
+    // Cria o bloco de estilo para alto contraste inteligente
+    // 1. html: Inverte as cores (invert) e rotaciona a matiz (hue-rotate) para manter cores como azul/vermelho reconhecíveis.
+    // 2. Aumenta o contraste (contrast) para garantir legibilidade.
+    // 3. Mídias: Reverte o filtro para que fotos e vídeos pareçam naturais.
     const css = `
-.${CLASS_NAME}, .${CLASS_NAME} * {
-    background-color: #000 !important;
-    color: #fff !important;
-    border-color: #fff !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-}
+        html {
+            filter: invert(100%) hue-rotate(180deg) contrast(115%) !important;
+            background-color: #fff !important; /* Garante base para inversão correta */
+            min-height: 100vh;
+        }
 
-/* Não substituir diretamente imagens/vídeos — permitem que permaneçam naturais */
-.${CLASS_NAME} img, .${CLASS_NAME} video, .${CLASS_NAME} svg {
-    background-color: transparent !important;
-    color: inherit !important;
-    filter: none !important;
-}
-
-/* Links em alto contraste: branco por padrão, mas com destaque */
-.${CLASS_NAME} a, .${CLASS_NAME} a * {
-    color: #9be3ff !important;
-}
-
-/* Evita que elementos muito pequenos percam legibilidade */
-.${CLASS_NAME} input, .${CLASS_NAME} textarea, .${CLASS_NAME} select {
-    background-color: #000 !important;
-    color: #fff !important;
-}
-`;
+        /* Reverte a inversão para elementos de mídia para que não pareçam negativos de foto */
+        img, video, picture, canvas, svg, iframe, embed, object {
+            filter: invert(100%) hue-rotate(180deg) !important;
+        }
+        
+        /* Opcional: Ajuste para imagens de fundo se necessário, mas difícil de detectar genericamente */
+    `;
 
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.appendChild(document.createTextNode(css));
     document.head.appendChild(style);
-
-    // Ativa a classe no documento
-    document.documentElement.classList.add(CLASS_NAME);
 })();
