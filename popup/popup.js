@@ -1,29 +1,41 @@
-// Função genérica para injetar e executar um script na aba ativa
+// Funções utilitárias para injetar scripts / funções na aba ativa
 async function executeScript(filePath) {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: [filePath]
-  });
+  if (!tab || !tab.id) return;
+  try {
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: [filePath] });
+  } catch (err) {
+    console.error('Erro ao injetar script:', filePath, err);
+  }
 }
 
-// Executa uma função diretamente na aba ativa via scripting.executeScript (aceita args)
 async function executeFunctionOnActiveTab(func, args = []) {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab || !tab.id) return;
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func,
-    args
-  }).catch(err => console.error('Erro ao executar função na aba:', err));
+  try {
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, func, args });
+  } catch (err) {
+    console.error('Erro ao executar função na aba:', err);
+  }
 }
 
-document.getElementById('btn-luz-azul').addEventListener('click', () => {
-  executeScript('scripts/filtro-luz-azul.js');
+// Associação de comandos a elementos (mantém IDs originais para compatibilidade)
+const actions = [
+  { id: 'btn-luz-azul', fn: () => executeScript('scripts/filtro-luz-azul.js') },
+  { id: 'btn-lupa', fn: () => executeScript('scripts/lupa.js') },
+  { id: 'btn-monocromatico', fn: () => executeScript('scripts/filtro-monocromatico.js') },
+  { id: 'btn-protanopia', fn: () => executeScript('scripts/filtro-daltonismo-protanopia.js') },
+  { id: 'btn-deuteranopia', fn: () => executeScript('scripts/filtro-daltonismo-deuteranopia.js') },
+  { id: 'btn-tritanopia', fn: () => executeScript('scripts/filtro-daltonismo-tritanopia.js') },
+  { id: 'btn-alto-contraste', fn: () => executeScript('scripts/filtro-alto-contraste.js') } // Added action
+];
+
+actions.forEach(a => {
+  const el = document.getElementById(a.id);
+  if (el) el.addEventListener('click', a.fn);
 });
 
-// Slider de intensidade da luz azul: cria/atualiza overlay com a opacidade definida
+// Slider de intensidade da luz azul — mantém a mesma lógica já existente
 const slider = document.getElementById('slider-luz-azul');
 const sliderValue = document.getElementById('slider-luz-azul-value');
 if (slider) {
@@ -31,16 +43,12 @@ if (slider) {
     const val = parseInt(e.target.value, 10);
     if (sliderValue) sliderValue.textContent = val + '%';
 
-    // função injetada na página para criar/atualizar overlay
     const fn = (opacityPercent) => {
       const overlayId = 'assistente-visual-luz-azul-overlay';
       let overlay = document.getElementById(overlayId);
-
-      // Não permitir opacidade total (max 85%) para preservar legibilidade
       const MAX = 85;
       const clamped = Math.max(0, Math.min(MAX, opacityPercent));
       const alpha = clamped / 100;
-
       if (!overlay) {
         overlay = document.createElement('div');
         overlay.id = overlayId;
@@ -51,12 +59,10 @@ if (slider) {
         overlay.style.height = '100vh';
         overlay.style.zIndex = '999999';
         overlay.style.pointerEvents = 'none';
-        // Blend mode faz com que a cor se misture ao conteúdo da página
         overlay.style.mixBlendMode = 'multiply';
         overlay.style.transition = 'background-color 160ms linear';
         document.documentElement.appendChild(overlay);
       }
-
       overlay.style.backgroundColor = `rgba(255,150,0,${alpha})`;
     };
 
@@ -64,31 +70,56 @@ if (slider) {
   });
 }
 
-document.getElementById('btn-monocromatico').addEventListener('click', () => {
-  executeScript('scripts/filtro-monocromatico.js');
-});
+// Botão fechar (apenas fecha o popup)
+const btnClose = document.getElementById('btn-close');
+if (btnClose) btnClose.addEventListener('click', () => window.close());
 
-document.getElementById('btn-lupa').addEventListener('click', () => {
-  executeScript('scripts/lupa.js');
-});
+// --- Interações visuais/feedback ---
+// Aplica feedback visual curto (classe 'pressed') para clicks e teclado
+function addInteractionFeedback(el) {
+  if (!el) return;
+  let timeoutId = null;
 
-// Novos botões: filtros de daltonismo específicos
-const btnProtanopia = document.getElementById('btn-protanopia');
-if (btnProtanopia) btnProtanopia.addEventListener('click', () => {
-  executeScript('scripts/filtro-daltonismo-protanopia.js');
-});
+  const add = () => {
+    el.classList.add('pressed');
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => el.classList.remove('pressed'), 180);
+  };
 
-const btnDeuteranopia = document.getElementById('btn-deuteranopia');
-if (btnDeuteranopia) btnDeuteranopia.addEventListener('click', () => {
-  executeScript('scripts/filtro-daltonismo-deuteranopia.js');
-});
+  const remove = () => {
+    if (timeoutId) clearTimeout(timeoutId);
+    el.classList.remove('pressed');
+  };
 
-const btnTritanopia = document.getElementById('btn-tritanopia');
-if (btnTritanopia) btnTritanopia.addEventListener('click', () => {
-  executeScript('scripts/filtro-daltonismo-tritanopia.js');
-});
+  el.addEventListener('pointerdown', add);
+  el.addEventListener('pointerup', remove);
+  el.addEventListener('pointerleave', remove);
+  el.addEventListener('touchend', remove);
 
-// const btnAltoContraste = document.getElementById('btn-alto-contraste');
-// if (btnAltoContraste) btnAltoContraste.addEventListener('click', () => {
-//   executeScript('scripts/filtro-alto-contraste.js');
-// });
+  // keyboard support: add visual feedback on Enter/Space
+  el.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') {
+      add();
+      // remove shortly after keydown to mimic native behavior
+      setTimeout(remove, 180);
+    }
+  });
+}
+
+// Apply feedback to interactive elements (without changing behavior)
+document.querySelectorAll('.action, .chip, .icon-btn').forEach(addInteractionFeedback);
+
+// Also ensure keyboard activation works for buttons (default works for <button>),
+// but add a safe handler to trigger click when Enter/Space pressed on non-button interactive elements.
+document.addEventListener('keydown', (e) => {
+  const active = document.activeElement;
+  if (!active) return;
+  const role = active.getAttribute('role');
+  const isButtonLike = active.tagName === 'BUTTON' || role === 'button' || active.classList.contains('chip') || active.classList.contains('action');
+  if (!isButtonLike) return;
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    // let native behavior happen for actual buttons — but for uniformity, call click
+    e.preventDefault();
+    active.click();
+  }
+});
